@@ -28,9 +28,13 @@ const site = `
 
 app.use(express.static('public'));
 
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
   res.setHeader('content-type', 'text/html');
   res.end(site);
 });
+app.get('/new_schedule', (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.end(main_schedule);
+})
 
 app.listen(port, () => console.log('started %d', port));
