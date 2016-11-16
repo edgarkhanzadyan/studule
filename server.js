@@ -10,6 +10,15 @@ const { createElement } = React;
 const site = `
 <!doctype html>
   <html>
+    <style>
+     /*  Basic resets for modern browsers */
+     * {
+       margin:0; padding:0; font-family: 'poppins', 'sans-serif';
+     }
+     html { box-sizing: border-box; }
+     *, *:before, *:after { box-sizing: inherit; }
+     /*  Basic resets for modern browsers */
+    </style>
     <body>
       <div id='container'>${ReactDOMServer.renderToString(createElement(Application, null))}</div>
     <script src='bundle.js'></script>

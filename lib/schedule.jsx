@@ -3,9 +3,18 @@ const { Component } = React;
 const style = require('./style');
 class Schedule extends Component {
   render() {
+    const renderStyle = {
+      flexColumn: {
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      flexRow: {
+        display: 'flex',
+      },
+    };
     return(
-      <div>
-        <header>
+      <div style={renderStyle.flexColumn}>
+        <header style={style.header}>
           <div style={style.logo}>
             Studule
           </div>

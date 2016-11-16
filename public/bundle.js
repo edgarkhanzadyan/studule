@@ -21452,7 +21452,16 @@
 	  _createClass(Schedule, [{
 	    key: 'render',
 	    value: function render() {
-	      return React.createElement('div', null, React.createElement('header', null, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput }), React.createElement('input', { style: style.whenClassInput }), React.createElement('input', { style: style.homeworkInput })), React.createElement('button', { style: style.buttonDate })), React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }), React.createElement('div', { style: style.homeworkTab })));
+	      var renderStyle = {
+	        flexColumn: {
+	          display: 'flex',
+	          flexDirection: 'column'
+	        },
+	        flexRow: {
+	          display: 'flex'
+	        }
+	      };
+	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput }), React.createElement('input', { style: style.whenClassInput }), React.createElement('input', { style: style.homeworkInput })), React.createElement('button', { style: style.buttonDate })), React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }), React.createElement('div', { style: style.homeworkTab })));
 	    }
 	  }]);
 
@@ -21465,20 +21474,41 @@
 /* 173 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	var style = {
-	  logo: {},
+	  header: {
+	    width: '100vw',
+	    justifyContent: 'center',
+	    textAlign: 'center'
+	  },
+	  logo: {
+	    justifyContent: 'center',
+	    textAlign: 'center',
+	    fontSize: '25px'
+	  },
 	  scheduleAdd: {},
 	  inputs: {},
 	  classInput: {},
 	  whenClassInput: {},
 	  homeworkInput: {},
 	  buttonDate: {},
-	  mainSchedule: {},
-	  timeSchedule: {},
-	  homeworkTab: {}
+	  mainSchedule: {
+	    display: 'flex',
+	    height: '70vh'
+	  },
+	  timeSchedule: {
+	    border: '5px solid black',
+	    width: '70%',
+	    height: '100%'
+	  },
+	  homeworkTab: {
+	    border: '5px solid black',
+	    width: '30%',
+	    height: '100%'
+	  }
 	};
+	module.exports = style;
 
 /***/ }
 /******/ ]);
