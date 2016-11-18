@@ -19,24 +19,21 @@ class Schedule extends Component {
       bufHomework: '',
       bufDay: '',
     };
-    for (let i = 0; i <= 6; ++i) {
+    for (let i = 0; i < 7; ++i) {
       for (let j = 0; j < 24; ++j) {
-        this.state.week[i].schedule[j].push({
-          event: '';
-        })
-      };
+        this.state.week[i].schedule[j] = {
+          event: '1'
+        };
+      }
     }
-    this.conn = new WebSocket('ws://localhost:4000');
     this.onDayChange = this.onDayChange.bind(this);
     this.onTimeChange = this.onTimeChange.bind(this);
     this.onClassChange = this.onClassChange.bind(this);
     this.onHomeworkChange = this.onHomeworkChange.bind(this);
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
   }
-  sendData((data) => this.conn.send(JSON.stringify({
-    cmd: 'new_data',
-    payload: data,
-  })));
+  sendData(data){
+  };
   clickHandlerPushEvent(e){
     if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTime.trim() !== ''){
       const buffer = JSON.stringify({
@@ -45,24 +42,24 @@ class Schedule extends Component {
         homework : bufHomework,
       });
       this.sendData(buffer);
-      this.setState({ ...this.state, bufClass: '', bufTime: '', bufHomework: ''});
+      this.setState({ bufClass: '', bufTime: '', bufHomework: ''});
     }
   }
   onDayChange(e){
     const day = e.currentTarget.value;
-    this.setState({...this.state, bufDay: day});
+    this.setState({ bufDay: day});
   }
   onClassChange(e){
-    const class = e.currentTarget.value;
-    this.setState({...this.state, bufClass: class });
+    const classs = e.currentTarget.value;
+    this.setState({ bufClass: classs });
   }
   onTimeChange(e){
     const time = e.currentTarget.value;
-    this.setState({...this.state, bufTime: time });
+    this.setState({ bufTime: time });
   }
   onHomeworkChange(e){
     const homework = e.currentTarget.value;
-    this.setState({...this.state, bufHomework: homework });
+    this.setState({ bufHomework: homework });
   }
   render() {
     const renderStyle = {
@@ -74,29 +71,30 @@ class Schedule extends Component {
         display: 'flex',
       },
     };
-    const makeDays = this.state.week.map((day, idx) => {
-      if(this.state.bool[idx]){
-        const makeHours = this.state.week[idx].schedule.map((hour,i) => {
-          if(i < 10){
-            return(
-              <li key={i}>0{i}:00 {hour.event}</li>
-            );
-          }else if(i >= 10){
-            return(
-              <li key={i}>{i}:00</li>
-            );
-          }
-        });
-        return(
-          <ul>
-            {makeHours}
-          </ul>
-        );
-      }
+    const makeHours = this.state.week[0].schedule.map((hour,i) => {
+        if(i < 10){
+          return(
+            <li key={i} style={style.eventul}>0{i}:00</li>
+          );
+        }else if(i >= 10){
+          return(
+            <li key={i} style={style.eventul}>{i}:00</li>
+          );
+        }
     });
-    const makeDaysButtons = this.state.week.map((day, idx) => {
+    const makeDays = this.state.week.map((day, idx) => {
+      const makeEvents = this.state.week[idx].schedule.map((ev, i) => {
+        return(
+          <li key={i} style={style.eventul}>{ev.event}</li>
+        )
+      })
       return(
-        <button key={idx}>{day.day}</button>
+        <div style={style.eventBox}>
+          <ul>
+            <li style={style.eventul}>{day.day}</li>
+            {makeEvents}
+          </ul>
+        </div>
       );
     });
     return(
@@ -116,12 +114,16 @@ class Schedule extends Component {
             <button style={style.buttonDate}>put new date!</button>
         </div>
         <div style={style.flexColumn}>
-          <div style={style.daysContainer}>
-            {makeDaysButtons}
-          </div>
           <div style={style.mainSchedule}>
             <div style={style.timeSchedule}>
-              {makeDays}
+              <div style={renderStyle.flexRow}>
+                <div style={style.eventBox}>
+                  <ul>
+                    {makeHours}
+                  </ul>
+                </div>
+                {makeDays}
+              </div>
             </div>
             <div style={style.homeworkTab}>
             </div>

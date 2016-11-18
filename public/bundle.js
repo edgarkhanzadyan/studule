@@ -21449,15 +21449,67 @@
 	    var _this = _possibleConstructorReturn(this, (Schedule.__proto__ || Object.getPrototypeOf(Schedule)).call(this));
 
 	    _this.state = {
-	      week: [{ day: 'Monday', schedule: [{ id: 0, event: 'Freshman' }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Tuesday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Wendnsday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Thursday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4, event: 'hey' }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Friday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Saturday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }, { day: 'Sunday', schedule: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 }, { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 }, { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 }, { id: 23 }] }],
-	      bool: [false, false, false, true, false, false, false]
+	      week: [{ day: 'Monday', schedule: [] }, { day: 'Tuesday', schedule: [] }, { day: 'Wednesday', schedule: [] }, { day: 'Thursday', schedule: [] }, { day: 'Friday', schedule: [] }, { day: 'Saturday', schedule: [] }, { day: 'Sunday', schedule: [] }],
+	      bufClass: '',
+	      bufTime: '',
+	      bufHomework: '',
+	      bufDay: ''
 	    };
+	    for (var i = 0; i < 7; ++i) {
+	      for (var j = 0; j < 24; ++j) {
+	        _this.state.week[i].schedule[j] = {
+	          event: '1'
+	        };
+	      }
+	    }
+	    _this.onDayChange = _this.onDayChange.bind(_this);
+	    _this.onTimeChange = _this.onTimeChange.bind(_this);
+	    _this.onClassChange = _this.onClassChange.bind(_this);
+	    _this.onHomeworkChange = _this.onHomeworkChange.bind(_this);
+	    _this.clickHandlerPushEvent = _this.clickHandlerPushEvent.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(Schedule, [{
-	    key: 'clickHandler',
-	    value: function clickHandler(e) {}
+	    key: 'sendData',
+	    value: function sendData(data) {}
+	  }, {
+	    key: 'clickHandlerPushEvent',
+	    value: function clickHandlerPushEvent(e) {
+	      if ((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTime.trim() !== '') {
+	        var buffer = JSON.stringify({
+	          classo: bufClass,
+	          time: bufTime,
+	          homework: bufHomework
+	        });
+	        this.sendData(buffer);
+	        this.setState({ bufClass: '', bufTime: '', bufHomework: '' });
+	      }
+	    }
+	  }, {
+	    key: 'onDayChange',
+	    value: function onDayChange(e) {
+	      var day = e.currentTarget.value;
+	      this.setState({ bufDay: day });
+	    }
+	  }, {
+	    key: 'onClassChange',
+	    value: function onClassChange(e) {
+	      var classs = e.currentTarget.value;
+	      this.setState({ bufClass: classs });
+	    }
+	  }, {
+	    key: 'onTimeChange',
+	    value: function onTimeChange(e) {
+	      var time = e.currentTarget.value;
+	      this.setState({ bufTime: time });
+	    }
+	  }, {
+	    key: 'onHomeworkChange',
+	    value: function onHomeworkChange(e) {
+	      var homework = e.currentTarget.value;
+	      this.setState({ bufHomework: homework });
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -21472,22 +21524,20 @@
 	          display: 'flex'
 	        }
 	      };
-	      var makeDays = this.state.week.map(function (day, idx) {
-	        if (_this2.state.bool[idx]) {
-	          var makeHours = _this2.state.week[idx].schedule.map(function (hour, i) {
-	            if (i < 10) {
-	              return React.createElement('li', { key: i }, '0', hour.id, ':00 ', hour.event);
-	            } else if (i >= 10) {
-	              return React.createElement('li', { key: i }, hour.id, ':00');
-	            }
-	          });
-	          return React.createElement('ul', null, makeHours);
+	      var makeHours = this.state.week[0].schedule.map(function (hour, i) {
+	        if (i < 10) {
+	          return React.createElement('li', { key: i, style: style.eventul }, '0', i, ':00');
+	        } else if (i >= 10) {
+	          return React.createElement('li', { key: i, style: style.eventul }, i, ':00');
 	        }
 	      });
-	      var makeDaysButtons = this.state.week.map(function (day, idx) {
-	        return React.createElement('button', { key: idx }, day.day);
+	      var makeDays = this.state.week.map(function (day, idx) {
+	        var makeEvents = _this2.state.week[idx].schedule.map(function (ev, i) {
+	          return React.createElement('li', { key: i, style: style.eventul }, ev.event);
+	        });
+	        return React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, day.day), makeEvents));
 	      });
-	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class' }), React.createElement('input', { style: style.whenClassInput, placeholder: 'when is that class' }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it' })), React.createElement('button', { style: style.buttonDate }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.daysContainer }, makeDaysButtons), React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, makeDays), React.createElement('div', { style: style.homeworkTab }))));
+	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class*', onChange: this.onClassChange }), React.createElement('input', { style: style.whenClassInput, placeholder: 'time of that class*', onChange: this.onTimeChange }), React.createElement('input', { style: style.whenClassInput, placeholder: 'day of that class*', onChange: this.onDayChange }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it', onChange: this.onHomeworkChange })), React.createElement('button', { style: style.buttonDate }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, React.createElement('div', { style: renderStyle.flexRow }, React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, makeHours)), makeDays)), React.createElement('div', { style: style.homeworkTab }))));
 	    }
 	  }]);
 
@@ -21519,6 +21569,13 @@
 	  whenClassInput: {},
 	  homeworkInput: {},
 	  buttonDate: {},
+	  eventBox: {
+	    border: '2px solid black',
+	    width: 'calc(100% / 8)'
+	  },
+	  eventul: {
+	    border: '1px solid black'
+	  },
 	  daysContainer: {
 	    display: 'flex'
 	  },
@@ -21531,7 +21588,7 @@
 	    height: '70vh'
 	  },
 	  timeSchedule: {
-	    border: '5px solid black',
+	    border: '2px solid black',
 	    width: '70%',
 	    height: '100%',
 	    overflow: 'scroll'
