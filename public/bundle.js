@@ -21560,20 +21560,18 @@
 	    value: function clickHandlerPushEvent(e) {
 	      if ((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTime.trim() !== '' && this.state.bufDay.trim() !== '') {
 	        var dayIndex = 0;
-	        console.log(this.state.bufTime);
 	        for (var i = 0; i < 7; ++i) {
 	          if (this.state.week[i].day === this.state.bufDay) {
 	            dayIndex = i;
 	          }
 	        }
-	        console.log(dayIndex);
 	        var request_options = {
 	          method: 'post',
 	          headers: new Headers({
 	            'Accept': 'application/json',
 	            'Content-Type': 'application/json'
 	          }),
-	          buffer: (0, _stringify2.default)({
+	          body: (0, _stringify2.default)({
 	            classo: this.state.bufClass,
 	            time: this.state.bufTime,
 	            homework: this.state.bufHomework,
@@ -21637,7 +21635,7 @@
 	        });
 	        return React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, day.day), makeEvents));
 	      });
-	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class*', onChange: this.onClassChange }), React.createElement('input', { style: style.whenClassInput, placeholder: 'time of that class*', onChange: this.onTimeChange }), React.createElement('input', { style: style.whenClassInput, placeholder: 'day of that class*', onChange: this.onDayChange }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it', onChange: this.onHomeworkChange })), React.createElement('button', { style: style.buttonDate, onClick: this.clickHandlerPushEvent }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, React.createElement('div', { style: renderStyle.flexRow }, React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, 'Time'), makeHours)), makeDays)), React.createElement('div', { style: style.homeworkTab }))));
+	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class*', onChange: this.onClassChange, value: this.state.bufClass }), React.createElement('input', { style: style.timeInput, placeholder: 'time of that class*', onChange: this.onTimeChange, value: this.state.bufTime }), React.createElement('input', { style: style.dayInput, placeholder: 'day of that class*', onChange: this.onDayChange, value: this.state.bufDay }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it', onChange: this.onHomeworkChange, value: this.state.bufHomework })), React.createElement('button', { style: style.buttonDate, onClick: this.clickHandlerPushEvent }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, React.createElement('div', { style: renderStyle.flexRow }, React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, 'Time'), makeHours)), makeDays)), React.createElement('div', { style: style.homeworkTab }))));
 	    }
 	  }]);
 	  return Schedule;
@@ -24650,7 +24648,8 @@
 	  scheduleAdd: {},
 	  inputs: {},
 	  classInput: {},
-	  whenClassInput: {},
+	  timeInput: {},
+	  dayInput: {},
 	  homeworkInput: {},
 	  buttonDate: {},
 	  eventBox: {

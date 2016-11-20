@@ -49,7 +49,6 @@ app.get('/new_schedule', (req, res) => {
   res.end(sendMe);
 });
 app.post('/new_data', json_parser, form_parser, (req, res) => {
-  console.log(req.body);
   week[req.body.day].schedule[req.body.time].event = req.body.classo;
   res.end();
 });

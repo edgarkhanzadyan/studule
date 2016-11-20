@@ -43,20 +43,18 @@ class Schedule extends Component {
     if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== ''
     && this.state.bufTime.trim() !== '' && this.state.bufDay.trim() !== ''){
       let dayIndex = 0;
-      console.log(this.state.bufTime);
       for(let i = 0; i < 7; ++i){
         if(this.state.week[i].day === this.state.bufDay){
           dayIndex = i;
         }
       }
-      console.log(dayIndex);
       const request_options = {
         method: 'post',
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }),
-        buffer:JSON.stringify({
+        body:JSON.stringify({
           classo : this.state.bufClass,
           time : this.state.bufTime,
           homework : this.state.bufHomework,
@@ -130,10 +128,10 @@ class Schedule extends Component {
         </header>
         <div style={style.scheduleAdd}>
           <div style={style.inputs}>
-            <input style={style.classInput} placeholder={'name of the class*'} onChange={this.onClassChange}/>
-            <input style={style.whenClassInput} placeholder={'time of that class*'} onChange={this.onTimeChange}/>
-            <input style={style.whenClassInput} placeholder={'day of that class*'} onChange={this.onDayChange}/>
-            <input style={style.homeworkInput} placeholder={'homework for it'} onChange={this.onHomeworkChange}/>
+            <input style={style.classInput} placeholder={'name of the class*'} onChange={this.onClassChange} value={this.state.bufClass}/>
+            <input style={style.timeInput} placeholder={'time of that class*'} onChange={this.onTimeChange} value={this.state.bufTime}/>
+            <input style={style.dayInput} placeholder={'day of that class*'} onChange={this.onDayChange} value={this.state.bufDay}/>
+            <input style={style.homeworkInput} placeholder={'homework for it'} onChange={this.onHomeworkChange} value={this.state.bufHomework}/>
           </div>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>put new date!</button>
         </div>
