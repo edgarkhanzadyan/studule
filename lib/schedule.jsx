@@ -22,7 +22,7 @@ class Schedule extends Component {
     for (let i = 0; i < 7; ++i) {
       for (let j = 0; j < 24; ++j) {
         this.state.week[i].schedule[j] = {
-          event: '1'
+          event: ''
         };
       }
     }
@@ -32,17 +32,41 @@ class Schedule extends Component {
     this.onHomeworkChange = this.onHomeworkChange.bind(this);
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
   }
-  sendData(data){
+  async componentDidMount() {
+    let request = 'http://localhost:4000/new_schedule';
+    let schedule = await fetch(request);
+    let all_schedule = await schedule.json();
+    this.setState({week: all_schedule.payload});
   };
+
   clickHandlerPushEvent(e){
-    if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTime.trim() !== ''){
-      const buffer = JSON.stringify({
-        classo : bufClass,
-        time : bufTime,
-        homework : bufHomework,
-      });
-      this.sendData(buffer);
-      this.setState({ bufClass: '', bufTime: '', bufHomework: ''});
+    if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== ''
+    && this.state.bufTime.trim() !== '' && this.state.bufDay.trim() !== ''){
+      let dayIndex = 0;
+      console.log(this.state.bufTime);
+      for(let i = 0; i < 7; ++i){
+        if(this.state.week[i].day === this.state.bufDay){
+          dayIndex = i;
+        }
+      }
+      console.log(dayIndex);
+      const request_options = {
+        method: 'post',
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        buffer:JSON.stringify({
+          classo : this.state.bufClass,
+          time : this.state.bufTime,
+          homework : this.state.bufHomework,
+          day : dayIndex,
+        }),
+      };
+      fetch('/new_data', request_options);
+      const newArr = this.state.week;
+      newArr[dayIndex].schedule[this.state.bufTime].event = this.state.bufClass;
+      this.setState({ week: newArr, bufClass: '', bufTime: '', bufHomework: '', bufDay: ''});
     }
   }
   onDayChange(e){
@@ -86,8 +110,8 @@ class Schedule extends Component {
       const makeEvents = this.state.week[idx].schedule.map((ev, i) => {
         return(
           <li key={i} style={style.eventul}>{ev.event}</li>
-        )
-      })
+        );
+      });
       return(
         <div style={style.eventBox}>
           <ul>
@@ -111,7 +135,7 @@ class Schedule extends Component {
             <input style={style.whenClassInput} placeholder={'day of that class*'} onChange={this.onDayChange}/>
             <input style={style.homeworkInput} placeholder={'homework for it'} onChange={this.onHomeworkChange}/>
           </div>
-            <button style={style.buttonDate}>put new date!</button>
+            <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>put new date!</button>
         </div>
         <div style={style.flexColumn}>
           <div style={style.mainSchedule}>
@@ -119,6 +143,7 @@ class Schedule extends Component {
               <div style={renderStyle.flexRow}>
                 <div style={style.eventBox}>
                   <ul>
+                    <li style={style.eventul}>Time</li>
                     {makeHours}
                   </ul>
                 </div>

@@ -1,11 +1,13 @@
-const express = require('express');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Application = require('./lib/schedule');
 const port = 4000;
 const { createElement } = React;
-const expressWs = require('express-ws')(express());
-const app = expressWs.app;
+const body_parser = require('body-parser');
+const json_parser = body_parser.json();
+const form_parser = body_parser.urlencoded({extended: true});
+const express = require('express');
+const app = express();
 const site = `
 <!doctype html>
   <html>
@@ -24,16 +26,15 @@ const site = `
     </body>
   </html>
 `;
-// const schedule = {
-//   {day:'Monday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Tuesday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Wendnsday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Thursday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Friday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Saturday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]},
-//   {day:'Sunday',schedule: [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10},{id:11},{id:12},{id:13},{id:14},{id:15},{id:16},{id:17},{id:18},{id:19},{id:20},{id:21},{id:22},{id:23}]}],
-// }
-
+let week = [
+  {day:'Monday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Tuesday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Wednesday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Thursday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Friday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Saturday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
+  {day:'Sunday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]}
+];
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
@@ -42,17 +43,14 @@ app.get('/', (req, res) => {
 });
 app.get('/new_schedule', (req, res) => {
   res.setHeader('content-type', 'text/html');
-  res.end(main_schedule);
-})
-app.ws('/', (ws, req) => {
-  ws.on('message', (msg) => {
-    const reply = JSON.parse(msg);
-
-    switch (reply.cmd) {
-      case 'new_data':
-
-    }
+  const sendMe = JSON.stringify({
+    payload: week,
   });
-  console.log('socket', req.testing);
+  res.end(sendMe);
+});
+app.post('/new_data', json_parser, form_parser, (req, res) => {
+  console.log(req.body);
+  week[req.body.day].schedule[req.body.time].event = req.body.classo;
+  res.end();
 });
 app.listen(port, () => console.log('started %d', port));
