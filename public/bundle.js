@@ -21498,8 +21498,10 @@
 
 	    _this.state = {
 	      week: [{ day: 'Monday', schedule: [] }, { day: 'Tuesday', schedule: [] }, { day: 'Wednesday', schedule: [] }, { day: 'Thursday', schedule: [] }, { day: 'Friday', schedule: [] }, { day: 'Saturday', schedule: [] }, { day: 'Sunday', schedule: [] }],
+	      hw: [],
 	      bufClass: '',
-	      bufTime: '',
+	      bufTimeFrom: '',
+	      bufTimeTo: '',
 	      bufHomework: '',
 	      bufDay: ''
 	    };
@@ -21511,7 +21513,8 @@
 	      }
 	    }
 	    _this.onDayChange = _this.onDayChange.bind(_this);
-	    _this.onTimeChange = _this.onTimeChange.bind(_this);
+	    _this.onTimeChangeFrom = _this.onTimeChangeFrom.bind(_this);
+	    _this.onTimeChangeTo = _this.onTimeChangeTo.bind(_this);
 	    _this.onClassChange = _this.onClassChange.bind(_this);
 	    _this.onHomeworkChange = _this.onHomeworkChange.bind(_this);
 	    _this.clickHandlerPushEvent = _this.clickHandlerPushEvent.bind(_this);
@@ -21539,7 +21542,7 @@
 	              case 6:
 	                all_schedule = _context.sent;
 
-	                this.setState({ week: all_schedule.payload });
+	                this.setState({ week: all_schedule.payload, hw: all_schedule.homew });
 
 	              case 8:
 	              case 'end':
@@ -21558,12 +21561,21 @@
 	  }, {
 	    key: 'clickHandlerPushEvent',
 	    value: function clickHandlerPushEvent(e) {
-	      if ((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTime.trim() !== '' && this.state.bufDay.trim() !== '') {
+	      if ((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== '' && this.state.bufTimeFrom.trim() !== '' && this.state.bufTimeTo.trim() !== '' && this.state.bufDay.trim() !== '') {
 	        var dayIndex = 0;
 	        for (var i = 0; i < 7; ++i) {
 	          if (this.state.week[i].day === this.state.bufDay) {
 	            dayIndex = i;
 	          }
+	        }
+	        var newClasses = this.state.week;
+	        for (var _i = this.state.bufTimeFrom; _i <= this.state.bufTimeTo; ++_i) {
+	          newClasses[dayIndex].schedule[_i].event = this.state.bufClass;
+	        }
+	        var newHomework = this.state.hw;
+	        if (this.state.bufHomework.trim() !== '') {
+	          var fullHw = this.state.bufHomework + " ( " + this.state.bufClass + " from " + this.state.bufTimeFrom + ":00 to " + this.state.bufTimeTo + ":00, " + this.state.bufDay + " )";
+	          newHomework[newHomework.length] = fullHw;
 	        }
 	        var request_options = {
 	          method: 'post',
@@ -21572,16 +21584,12 @@
 	            'Content-Type': 'application/json'
 	          }),
 	          body: (0, _stringify2.default)({
-	            classo: this.state.bufClass,
-	            time: this.state.bufTime,
-	            homework: this.state.bufHomework,
-	            day: dayIndex
+	            array: newClasses,
+	            homework: newHomework
 	          })
 	        };
 	        fetch('/new_data', request_options);
-	        var newArr = this.state.week;
-	        newArr[dayIndex].schedule[this.state.bufTime].event = this.state.bufClass;
-	        this.setState({ week: newArr, bufClass: '', bufTime: '', bufHomework: '', bufDay: '' });
+	        this.setState({ week: newClasses, bufClass: '', bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: '' });
 	      }
 	    }
 	  }, {
@@ -21597,10 +21605,16 @@
 	      this.setState({ bufClass: classs });
 	    }
 	  }, {
-	    key: 'onTimeChange',
-	    value: function onTimeChange(e) {
+	    key: 'onTimeChangeFrom',
+	    value: function onTimeChangeFrom(e) {
 	      var time = e.currentTarget.value;
-	      this.setState({ bufTime: time });
+	      this.setState({ bufTimeFrom: time });
+	    }
+	  }, {
+	    key: 'onTimeChangeTo',
+	    value: function onTimeChangeTo(e) {
+	      var time = e.currentTarget.value;
+	      this.setState({ bufTimeTo: time });
 	    }
 	  }, {
 	    key: 'onHomeworkChange',
@@ -21622,6 +21636,9 @@
 	          display: 'flex'
 	        }
 	      };
+	      var makeHomework = this.state.hw.map(function (homew, i) {
+	        return React.createElement('li', { key: i, style: style.homeworkItem }, homew);
+	      });
 	      var makeHours = this.state.week[0].schedule.map(function (hour, i) {
 	        if (i < 10) {
 	          return React.createElement('li', { key: i, style: style.eventul }, '0', i, ':00');
@@ -21635,7 +21652,7 @@
 	        });
 	        return React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, day.day), makeEvents));
 	      });
-	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class*', onChange: this.onClassChange, value: this.state.bufClass }), React.createElement('input', { style: style.timeInput, placeholder: 'time of that class*', onChange: this.onTimeChange, value: this.state.bufTime }), React.createElement('input', { style: style.dayInput, placeholder: 'day of that class*', onChange: this.onDayChange, value: this.state.bufDay }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it', onChange: this.onHomeworkChange, value: this.state.bufHomework })), React.createElement('button', { style: style.buttonDate, onClick: this.clickHandlerPushEvent }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, React.createElement('div', { style: renderStyle.flexRow }, React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, 'Time'), makeHours)), makeDays)), React.createElement('div', { style: style.homeworkTab }))));
+	      return React.createElement('div', { style: renderStyle.flexColumn }, React.createElement('header', { style: style.header }, React.createElement('div', { style: style.logo }, 'Studule')), React.createElement('div', { style: style.scheduleAdd }, React.createElement('div', { style: style.inputs }, React.createElement('input', { style: style.classInput, placeholder: 'name of the class*', onChange: this.onClassChange, value: this.state.bufClass }), React.createElement('input', { style: style.timeInput, placeholder: 'time of that class(from)*', onChange: this.onTimeChangeFrom, value: this.state.bufTimeFrom }), React.createElement('input', { style: style.timeInput, placeholder: 'time of that class(to)*', onChange: this.onTimeChangeTo, value: this.state.bufTimeTo }), React.createElement('input', { style: style.dayInput, placeholder: 'day of that class*', onChange: this.onDayChange, value: this.state.bufDay }), React.createElement('input', { style: style.homeworkInput, placeholder: 'homework for it', onChange: this.onHomeworkChange, value: this.state.bufHomework })), React.createElement('button', { style: style.buttonDate, onClick: this.clickHandlerPushEvent }, 'put new date!')), React.createElement('div', { style: style.flexColumn }, React.createElement('div', { style: style.mainSchedule }, React.createElement('div', { style: style.timeSchedule }, React.createElement('div', { style: renderStyle.flexRow }, React.createElement('div', { style: style.eventBox }, React.createElement('ul', null, React.createElement('li', { style: style.eventul }, 'Time'), makeHours)), makeDays)), React.createElement('div', { style: style.homeworkTab }, React.createElement('div', { style: style.homeworkLogo }, 'homework tab'), React.createElement('div', null, React.createElement('ul', null, makeHomework))))));
 	    }
 	  }]);
 	  return Schedule;
@@ -24679,7 +24696,16 @@
 	  homeworkTab: {
 	    border: '5px solid black',
 	    width: '30%',
-	    height: '100%'
+	    height: '100%',
+	    display: 'flex',
+	    flexDirection: 'column',
+	    textAlign: 'center'
+	  },
+	  homeworkItem: {
+	    fontSize: '16px'
+	  },
+	  homeworkLogo: {
+	    fontSize: '30px'
 	  }
 	};
 	module.exports = style;

@@ -35,6 +35,7 @@ let week = [
   {day:'Saturday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
   {day:'Sunday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]}
 ];
+let homework = [];
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
@@ -45,11 +46,14 @@ app.get('/new_schedule', (req, res) => {
   res.setHeader('content-type', 'text/html');
   const sendMe = JSON.stringify({
     payload: week,
+    homew: homework,
   });
   res.end(sendMe);
 });
 app.post('/new_data', json_parser, form_parser, (req, res) => {
-  week[req.body.day].schedule[req.body.time].event = req.body.classo;
+  week = req.body.array;
+  homework = req.body.homework;
+  console.log(req.body.homework);
   res.end();
 });
 app.listen(port, () => console.log('started %d', port));

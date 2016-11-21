@@ -6,16 +6,18 @@ class Schedule extends Component {
     super();
     this.state = {
       week: [
-      {day:'Monday',schedule: []},
-      {day:'Tuesday',schedule: []},
-      {day:'Wednesday',schedule: []},
-      {day:'Thursday',schedule: []},
-      {day:'Friday',schedule: []},
-      {day:'Saturday',schedule: []},
-      {day:'Sunday',schedule: []}
+        {day:'Monday',schedule: []},
+        {day:'Tuesday',schedule: []},
+        {day:'Wednesday',schedule: []},
+        {day:'Thursday',schedule: []},
+        {day:'Friday',schedule: []},
+        {day:'Saturday',schedule: []},
+        {day:'Sunday',schedule: []}
       ],
+      hw: [],
       bufClass: '',
-      bufTime: '',
+      bufTimeFrom: '',
+      bufTimeTo: '',
       bufHomework: '',
       bufDay: '',
     };
@@ -27,7 +29,8 @@ class Schedule extends Component {
       }
     }
     this.onDayChange = this.onDayChange.bind(this);
-    this.onTimeChange = this.onTimeChange.bind(this);
+    this.onTimeChangeFrom = this.onTimeChangeFrom.bind(this);
+    this.onTimeChangeTo = this.onTimeChangeTo.bind(this);
     this.onClassChange = this.onClassChange.bind(this);
     this.onHomeworkChange = this.onHomeworkChange.bind(this);
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
@@ -36,17 +39,26 @@ class Schedule extends Component {
     let request = 'http://localhost:4000/new_schedule';
     let schedule = await fetch(request);
     let all_schedule = await schedule.json();
-    this.setState({week: all_schedule.payload});
+    this.setState({week: all_schedule.payload, hw: all_schedule.homew});
   };
 
   clickHandlerPushEvent(e){
     if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== ''
-    && this.state.bufTime.trim() !== '' && this.state.bufDay.trim() !== ''){
+    && this.state.bufTimeFrom.trim() !== '' && this.state.bufTimeTo.trim() !== '' && this.state.bufDay.trim() !== ''){
       let dayIndex = 0;
       for(let i = 0; i < 7; ++i){
         if(this.state.week[i].day === this.state.bufDay){
           dayIndex = i;
         }
+      }
+      const newClasses = this.state.week;
+      for(let i = this.state.bufTimeFrom; i <= this.state.bufTimeTo; ++i){
+        newClasses[dayIndex].schedule[i].event = this.state.bufClass;
+      }
+      const newHomework = this.state.hw;
+      if(this.state.bufHomework.trim() !== ''){
+        const fullHw = this.state.bufHomework + " ( " + this.state.bufClass + " from " + this.state.bufTimeFrom + ":00 to " + this.state.bufTimeTo + ":00, " + this.state.bufDay + " )";
+        newHomework[newHomework.length] = fullHw;
       }
       const request_options = {
         method: 'post',
@@ -55,16 +67,12 @@ class Schedule extends Component {
           'Content-Type': 'application/json',
         }),
         body:JSON.stringify({
-          classo : this.state.bufClass,
-          time : this.state.bufTime,
-          homework : this.state.bufHomework,
-          day : dayIndex,
+          array : newClasses,
+          homework: newHomework,
         }),
       };
       fetch('/new_data', request_options);
-      const newArr = this.state.week;
-      newArr[dayIndex].schedule[this.state.bufTime].event = this.state.bufClass;
-      this.setState({ week: newArr, bufClass: '', bufTime: '', bufHomework: '', bufDay: ''});
+      this.setState({ week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
     }
   }
   onDayChange(e){
@@ -75,9 +83,13 @@ class Schedule extends Component {
     const classs = e.currentTarget.value;
     this.setState({ bufClass: classs });
   }
-  onTimeChange(e){
+  onTimeChangeFrom(e){
     const time = e.currentTarget.value;
-    this.setState({ bufTime: time });
+    this.setState({ bufTimeFrom: time });
+  }
+  onTimeChangeTo(e){
+    const time = e.currentTarget.value;
+    this.setState({ bufTimeTo: time });
   }
   onHomeworkChange(e){
     const homework = e.currentTarget.value;
@@ -93,6 +105,11 @@ class Schedule extends Component {
         display: 'flex',
       },
     };
+    const makeHomework = this.state.hw.map((homew, i) => {
+      return(
+        <li key={i} style={style.homeworkItem}>{homew}</li>
+      );
+    })
     const makeHours = this.state.week[0].schedule.map((hour,i) => {
         if(i < 10){
           return(
@@ -129,7 +146,8 @@ class Schedule extends Component {
         <div style={style.scheduleAdd}>
           <div style={style.inputs}>
             <input style={style.classInput} placeholder={'name of the class*'} onChange={this.onClassChange} value={this.state.bufClass}/>
-            <input style={style.timeInput} placeholder={'time of that class*'} onChange={this.onTimeChange} value={this.state.bufTime}/>
+            <input style={style.timeInput} placeholder={'time of that class(from)*'} onChange={this.onTimeChangeFrom} value={this.state.bufTimeFrom}/>
+            <input style={style.timeInput} placeholder={'time of that class(to)*'} onChange={this.onTimeChangeTo} value={this.state.bufTimeTo}/>
             <input style={style.dayInput} placeholder={'day of that class*'} onChange={this.onDayChange} value={this.state.bufDay}/>
             <input style={style.homeworkInput} placeholder={'homework for it'} onChange={this.onHomeworkChange} value={this.state.bufHomework}/>
           </div>
@@ -149,6 +167,12 @@ class Schedule extends Component {
               </div>
             </div>
             <div style={style.homeworkTab}>
+              <div style={style.homeworkLogo}>homework tab</div>
+              <div>
+                <ul>
+                  {makeHomework}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
