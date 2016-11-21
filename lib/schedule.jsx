@@ -96,15 +96,6 @@ class Schedule extends Component {
     this.setState({ bufHomework: homework });
   }
   render() {
-    const renderStyle = {
-      flexColumn: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
-      flexRow: {
-        display: 'flex',
-      },
-    };
     const makeHomework = this.state.hw.map((homew, i) => {
       return(
         <li key={i} style={style.homeworkItem}>{homew}</li>
@@ -113,31 +104,31 @@ class Schedule extends Component {
     const makeHours = this.state.week[0].schedule.map((hour,i) => {
         if(i < 10){
           return(
-            <li key={i} style={style.eventul}>0{i}:00</li>
+            <li key={i} style={style.eventli}>0{i}:00</li>
           );
         }else if(i >= 10){
           return(
-            <li key={i} style={style.eventul}>{i}:00</li>
+            <li key={i} style={style.eventli}>{i}:00</li>
           );
         }
     });
     const makeDays = this.state.week.map((day, idx) => {
       const makeEvents = this.state.week[idx].schedule.map((ev, i) => {
         return(
-          <li key={i} style={style.eventul}>{ev.event}</li>
+          <li key={i} style={style.eventli}>{ev.event}</li>
         );
       });
       return(
         <div style={style.eventBox}>
-          <ul>
-            <li style={style.eventul}>{day.day}</li>
+          <ul style={style.eventul}>
+            <li style={style.eventli}>{day.day}</li>
             {makeEvents}
           </ul>
         </div>
       );
     });
     return(
-      <div style={renderStyle.flexColumn}>
+      <div style={style.flexColumn}>
         <header style={style.header}>
           <div style={style.logo}>
             Studule
@@ -145,21 +136,21 @@ class Schedule extends Component {
         </header>
         <div style={style.scheduleAdd}>
           <div style={style.inputs}>
-            <input style={style.classInput} placeholder={'name of the class*'} onChange={this.onClassChange} value={this.state.bufClass}/>
-            <input style={style.timeInput} placeholder={'time of that class(from)*'} onChange={this.onTimeChangeFrom} value={this.state.bufTimeFrom}/>
-            <input style={style.timeInput} placeholder={'time of that class(to)*'} onChange={this.onTimeChangeTo} value={this.state.bufTimeTo}/>
-            <input style={style.dayInput} placeholder={'day of that class*'} onChange={this.onDayChange} value={this.state.bufDay}/>
-            <input style={style.homeworkInput} placeholder={'homework for it'} onChange={this.onHomeworkChange} value={this.state.bufHomework}/>
+            <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass}/>
+            <input style={style.timeInput} placeholder={'Time (from)*'} onChange={this.onTimeChangeFrom} value={this.state.bufTimeFrom}/>
+            <input style={style.timeInput} placeholder={'Time (to)*'} onChange={this.onTimeChangeTo} value={this.state.bufTimeTo}/>
+            <input style={style.dayInput} placeholder={'Day of the week*'} onChange={this.onDayChange} value={this.state.bufDay}/>
+            <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework}/>
           </div>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>put new date!</button>
         </div>
         <div style={style.flexColumn}>
           <div style={style.mainSchedule}>
             <div style={style.timeSchedule}>
-              <div style={renderStyle.flexRow}>
+              <div style={style.flexRow}>
                 <div style={style.eventBox}>
                   <ul>
-                    <li style={style.eventul}>Time</li>
+                    <li style={style.eventli}>Time</li>
                     {makeHours}
                   </ul>
                 </div>

@@ -11,7 +11,7 @@
     "build": "webpack --progress",
     "build-site": "npm run backend && npm run build"
   },
-  "author": "Edgar Khanzadian edgar.khanzadian@gmail.com",
+  "author": "Edgar Khanzadian edgar.khanzadian@gmail.com and Erik Davtyan erikdavtyan@gmail.com",
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.18.2",
