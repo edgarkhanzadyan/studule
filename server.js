@@ -1,7 +1,7 @@
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Application = require('./lib/schedule');
-const port = 4000;
+const port = 8080;
 const { createElement } = React;
 const body_parser = require('body-parser');
 const json_parser = body_parser.json();

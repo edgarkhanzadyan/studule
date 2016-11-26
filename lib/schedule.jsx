@@ -1,6 +1,7 @@
 const React = require('react');
 const { Component } = React;
 const style = require('./style');
+
 class Schedule extends Component {
   constructor(){
     super();
@@ -36,28 +37,28 @@ class Schedule extends Component {
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
   }
   async componentDidMount() {
-    let request = 'http://localhost:4000/new_schedule';
+    let request = 'http://localhost:8080/new_schedule';
     let schedule = await fetch(request);
     let all_schedule = await schedule.json();
     this.setState({week: all_schedule.payload, hw: all_schedule.homew});
   };
 
   clickHandlerPushEvent(e){
-    if((e.button === 0 || e.key === 'Enter') && this.state.bufClass.trim() !== ''
-    && this.state.bufTimeFrom.trim() !== '' && this.state.bufTimeTo.trim() !== '' && this.state.bufDay.trim() !== ''){
-      let dayIndex = 0;
+    if((e.button === 0 || e.keyCode === 13) && this.state.bufClass.trim() !== ''
+    && this.state.bufTimeFrom.trim() !== '' && this.state.bufTimeTo.trim() !== ''){
+      let dayIndex;
       for(let i = 0; i < 7; ++i){
         if(this.state.week[i].day === this.state.bufDay){
           dayIndex = i;
         }
       }
       const newClasses = this.state.week;
-      for(let i = this.state.bufTimeFrom; i <= this.state.bufTimeTo; ++i){
+      for(let i = this.state.bufTimeFrom.substr(0, 2); i < this.state.bufTimeTo.substr(0, 2); ++i){
         newClasses[dayIndex].schedule[i].event = this.state.bufClass;
       }
       const newHomework = this.state.hw;
       if(this.state.bufHomework.trim() !== ''){
-        const fullHw = this.state.bufHomework + " ( " + this.state.bufClass + " from " + this.state.bufTimeFrom + ":00 to " + this.state.bufTimeTo + ":00, " + this.state.bufDay + " )";
+        const fullHw = `${this.state.bufClass} homework for ${this.state.bufTimeFrom}:00 on ${this.state.bufDay}: ${this.state.bufHomework}`;
         newHomework[newHomework.length] = fullHw;
       }
       const request_options = {
@@ -77,7 +78,7 @@ class Schedule extends Component {
   }
   onDayChange(e){
     const day = e.currentTarget.value;
-    this.setState({ bufDay: day});
+    this.setState({ bufDay: day });
   }
   onClassChange(e){
     const classs = e.currentTarget.value;
@@ -96,6 +97,17 @@ class Schedule extends Component {
     this.setState({ bufHomework: homework });
   }
   render() {
+    const makeHourChoices = this.state.week[0].schedule.map((hour,i) => {
+        if(i < 10){
+          return(
+            <option key={i} value={i}>0{i}:00</option>
+          );
+        }else if(i >= 10){
+          return(
+            <option key={i} value={i}>{i}:00</option>
+          );
+        }
+    });
     const makeHomework = this.state.hw.map((homew, i) => {
       return(
         <li key={i} style={style.homeworkItem}>{homew}</li>
@@ -136,13 +148,28 @@ class Schedule extends Component {
         </header>
         <div style={style.scheduleAdd}>
           <div style={style.inputs}>
-            <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass}/>
-            <input style={style.timeInput} placeholder={'Time (from)*'} onChange={this.onTimeChangeFrom} value={this.state.bufTimeFrom}/>
-            <input style={style.timeInput} placeholder={'Time (to)*'} onChange={this.onTimeChangeTo} value={this.state.bufTimeTo}/>
-            <input style={style.dayInput} placeholder={'Day of the week*'} onChange={this.onDayChange} value={this.state.bufDay}/>
-            <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework}/>
+            <select onChange={this.onTimeChangeFrom} value={this.state.bufTimeFrom}>
+              <option value="" style={style.dontShow}>Choose start time</option>
+              {makeHourChoices}
+            </select>
+            <select onChange={this.onTimeChangeTo} value={this.state.bufTimeTo}>
+              <option value="" style={style.dontShow}>Choose finish time</option>
+              {makeHourChoices}
+            </select>
+            <select onChange={this.onDayChange} value={this.state.bufDay}>
+              <option value="" style={style.dontShow}>Choose week day</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+              <option value="Sunday">Sunday</option>
+            </select>
+            <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass} onKeyDown={this.clickHandlerPushEvent}/>
+            <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework} onKeyDown={this.clickHandlerPushEvent}/>
           </div>
-            <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>put new date!</button>
+            <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event</button>
         </div>
         <div style={style.flexColumn}>
           <div style={style.mainSchedule}>
@@ -158,7 +185,7 @@ class Schedule extends Component {
               </div>
             </div>
             <div style={style.homeworkTab}>
-              <div style={style.homeworkLogo}>homework tab</div>
+              <div style={style.homeworkLogo}>Homework tab</div>
               <div>
                 <ul>
                   {makeHomework}
