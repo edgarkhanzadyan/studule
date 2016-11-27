@@ -9,6 +9,10 @@ class Homework extends Component {
   }
   render(){
     const style = {
+      mainContainer: {
+        backgroundColor: 'orange',
+        flex: 1,
+      },
       flexRow: {
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -31,7 +35,7 @@ class Homework extends Component {
       );
     });
     return(
-      <View>
+      <View style={style.mainContainer}>
         <View style={style.flexRow}>
           <TouchableOpacity onPress={() => this.props.navigator.pop()}>
             <Text style={style.changeGoToScene}>go to Calendar</Text>

@@ -15,7 +15,6 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import MyScene from './lib/MyScene';
 import Calendar from './lib/Calendar';
 import AddNewEvent from './lib/AddNewEvent';
 import Homework from './lib/Homework';
