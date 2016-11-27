@@ -21,6 +21,7 @@ class Schedule extends Component {
       bufTimeTo: '',
       bufHomework: '',
       bufDay: '',
+      notPossibleInfo: false,
     };
     for (let i = 0; i < 7; ++i) {
       for (let j = 0; j < 24; ++j) {
@@ -44,8 +45,8 @@ class Schedule extends Component {
   };
 
   clickHandlerPushEvent(e){
-    if((e.button === 0 || e.keyCode === 13) && this.state.bufClass.trim() !== ''
-    && this.state.bufTimeFrom.trim() !== '' && this.state.bufTimeTo.trim() !== ''){
+    if( this.state.bufClass.trim() !== '' && (e.key === 'Enter' || e.button === 0) && this.state.bufDay !== ''
+    && this.state.bufTimeFrom !== '' && this.state.bufTimeTo !== '' && (this.state.bufTimeTo > this.state.bufTimeFrom)){
       let dayIndex;
       for(let i = 0; i < 7; ++i){
         if(this.state.week[i].day === this.state.bufDay){
@@ -53,7 +54,7 @@ class Schedule extends Component {
         }
       }
       const newClasses = this.state.week;
-      for(let i = this.state.bufTimeFrom.substr(0, 2); i < this.state.bufTimeTo.substr(0, 2); ++i){
+      for(let i = this.state.bufTimeFrom; i < this.state.bufTimeTo; ++i){
         newClasses[dayIndex].schedule[i].event = this.state.bufClass;
       }
       const newHomework = this.state.hw;
@@ -73,7 +74,9 @@ class Schedule extends Component {
         }),
       };
       fetch('/new_data', request_options);
-      this.setState({ week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
+      this.setState({ notPossibleInfo: false, week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
+    }else if(e.key === 'Enter' || e.button === 0) {
+      this.setState({ notPossibleInfo: true });
     }
   }
   onDayChange(e){
@@ -85,11 +88,13 @@ class Schedule extends Component {
     this.setState({ bufClass: classs });
   }
   onTimeChangeFrom(e){
-    const time = e.currentTarget.value;
+    const time = parseInt(e.currentTarget.value);
+    console.log(time);
     this.setState({ bufTimeFrom: time });
   }
   onTimeChangeTo(e){
-    const time = e.currentTarget.value;
+    const time = parseInt(e.currentTarget.value);
+    console.log(time);
     this.setState({ bufTimeTo: time });
   }
   onHomeworkChange(e){
@@ -97,14 +102,22 @@ class Schedule extends Component {
     this.setState({ bufHomework: homework });
   }
   render() {
-    const makeHourChoices = this.state.week[0].schedule.map((hour,i) => {
-        if(i < 10){
+    const makeHourChoices = this.state.week[0].schedule.map((hour, i) => {
+        if(i-Math.round(i/2) < 10 && i % 2 == 0){
           return(
-            <option key={i} value={i}>0{i}:00</option>
+            <option key={i} value={i}>0{i-Math.round(i/2)}:00</option>
           );
-        }else if(i >= 10){
+        }else if(i-Math.round(i/2) < 10 && i % 2 == 1){
           return(
-            <option key={i} value={i}>{i}:00</option>
+            <option key={i} value={i}>0{i-Math.round(i/2)}:30</option>
+          );
+        }else if(i-Math.round(i/2) >= 10 && i % 2 == 0){
+          return(
+            <option key={i} value={i}>{i-Math.round(i/2)}:00</option>
+          );
+        }else if(i-Math.round(i/2) >= 10 && i % 2 == 1){
+          return(
+            <option key={i} value={i}>{i-Math.round(i/2)}:30</option>
           );
         }
     });
@@ -114,13 +127,21 @@ class Schedule extends Component {
       );
     })
     const makeHours = this.state.week[0].schedule.map((hour,i) => {
-        if(i < 10){
+        if(i-Math.round(i/2) < 10 && i % 2 == 0){
           return(
-            <li key={i} style={style.eventli}>0{i}:00</li>
+            <li key={i} style={style.eventli}>0{i-Math.round(i/2)}:00</li>
           );
-        }else if(i >= 10){
+        }else if(i-Math.round(i/2) < 10 && i % 2 == 1){
           return(
-            <li key={i} style={style.eventli}>{i}:00</li>
+            <li key={i} style={style.eventli}>0{i-Math.round(i/2)}:30</li>
+          );
+        }else if(i-Math.round(i/2) >= 10 && i % 2 == 0){
+          return(
+            <li key={i} style={style.eventli}>{i-Math.round(i/2)}:00</li>
+          );
+        }else if(i-Math.round(i/2) >= 10 && i % 2 == 1){
+          return(
+            <li key={i} style={style.eventli}>{i-Math.round(i/2)}:30</li>
           );
         }
     });
@@ -139,6 +160,7 @@ class Schedule extends Component {
         </div>
       );
     });
+
     return(
       <div style={style.flexColumn}>
         <header style={style.header}>
@@ -169,7 +191,10 @@ class Schedule extends Component {
             <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass} onKeyDown={this.clickHandlerPushEvent}/>
             <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework} onKeyDown={this.clickHandlerPushEvent}/>
           </div>
+          <div style={style.buttonWrapper}>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event</button>
+            <p style={this.state.notPossibleInfo ? style.warningShow : style.warningNotShow}>Not possible information</p>
+          </div>
         </div>
         <div style={style.flexColumn}>
           <div style={style.mainSchedule}>

@@ -27,13 +27,13 @@ const site = `
   </html>
 `;
 let week = [
-  {day:'Monday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Tuesday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Wednesday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Thursday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Friday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Saturday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]},
-  {day:'Sunday',schedule: [{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''},{event:''}]}
+  {day:'Monday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+  {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
 ];
 let homework = [];
 app.use(express.static('public'));
@@ -53,7 +53,6 @@ app.get('/new_schedule', (req, res) => {
 app.post('/new_data', json_parser, form_parser, (req, res) => {
   week = req.body.array;
   homework = req.body.homework;
-  console.log(req.body.homework);
   res.end();
 });
 app.listen(port, () => console.log('started %d', port));
