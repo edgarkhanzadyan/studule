@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Button} from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Button, ScrollView, Picker } from 'react-native';
 
 export default
 class AddNewEvent extends Component {
@@ -7,13 +7,13 @@ class AddNewEvent extends Component {
     super();
     this.state = {
       week: [
-        {day:'Monday',schedule: []},
-        {day:'Tuesday',schedule: []},
-        {day:'Wednesday',schedule: []},
-        {day:'Thursday',schedule: []},
-        {day:'Friday',schedule: []},
-        {day:'Saturday',schedule: []},
-        {day:'Sunday',schedule: []}
+        {day:'Monday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
       ],
       hw: [],
       bufClass: '',
@@ -53,7 +53,8 @@ class AddNewEvent extends Component {
           homework: newHomework,
         }),
       };
-      fetch('http://localhost:8888/new_data', request_options)
+      console.log(newClasses)
+      fetch('http://localhost:8080/new_data', request_options)
       .then(resp => resp.text())
       .then(console.log)
       .catch(console.error);
@@ -63,36 +64,11 @@ class AddNewEvent extends Component {
       this.setState({ notPossibleInfo: true });
     }
   }
-  onDayChange = (e) => {
-    console.log('day');
-    const day = e.currentTarget.value;
-    this.setState({ bufDay: day});
-  };
-  onClassChange = (e) => {
-    console.log('clas');
-    const classs = e.currentTarget.value;
-    this.setState({ bufClass: classs });
-  };
-  onTimeChangeFrom = (e) => {
-    console.log('from');
-    const time = e.currentTarget.value;
-    this.setState({ bufTimeFrom: time });
-  };
-  onTimeChangeTo = (e) => {
-    console.log('to');
-    const time = e.currentTarget.value;
-    this.setState({ bufTimeTo: time });
-  }
-  onHomeworkChange = (e) => {
-    console.log('hw');
-    const homework = e.currentTarget.value;
-    this.setState({ bufHomework: homework });
-  }
   render(){
     const style = {
       mainContainer: {
         backgroundColor: 'orange',
-        flex: 1,
+        flex: 1
       },
       submitWrapper: {
         alignItems: 'center',
@@ -116,46 +92,140 @@ class AddNewEvent extends Component {
       }
     };
     return(
-      <View style={style.mainContainer}>
+      <ScrollView style={style.mainContainer}>
         <View>
           <TouchableOpacity style={style.goToWrapper} onPress={() => this.props.navigator.pop()}>
             <Text style={style.changeGoToScene}>go back</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <Text style={style.inputDescription}>Day</Text>
-          <TextInput
-            style={style.inputStyles}
-            placeholder={'input day of the event'}
-            autoCorrect={false}
-            onChange={this.onDayChange}
-          />
-        </View>
-        <View>
-          <Text style={style.inputDescription}>Hour from</Text>
-          <TextInput
-            style={style.inputStyles}
-            placeholder={'input when class starts'}
-            autoCorrect={false}
-            onChange={this.onTimeChangeFrom}
-          />
-        </View>
-        <View>
-          <Text style={style.inputDescription}>Hour To</Text>
-          <TextInput
-            style={style.inputStyles}
-            placeholder={'input when class ends'}
-            autoCorrect={false}
-            onChange={this.onTimeChangeTo}
-          />
-        </View>
+        <Picker
+          mode='dropdown'
+          selectedValue={this.state.bufDay}
+          onValueChange={(data) => this.setState({ bufDay: data})}>
+          <Picker.Item label='input day of the class' value='' />
+          <Picker.Item label="Monday" value="Monday" />
+          <Picker.Item label="Tuesday" value="Tuesday" />
+          <Picker.Item label="Wednesday" value="Wednesday" />
+          <Picker.Item label="Thursday" value="Thursday" />
+          <Picker.Item label="Friday" value="Friday" />
+          <Picker.Item label="Saturday" value="Saturday" />
+          <Picker.Item label="Sunday" value="Sunday" />
+        </Picker>
+        <Picker
+          mode='dropdown'
+          selectedValue={this.state.bufTimeFrom}
+          onValueChange={(data) => this.setState({ bufTimeFrom: data })}>
+          <Picker.Item label='input when class starts' value='' />
+          <Picker.Item label='00:00' value={0} />
+          <Picker.Item label='00:30' value={1} />
+          <Picker.Item label='01:00' value={2} />
+          <Picker.Item label='01:30' value={3} />
+          <Picker.Item label='02:00' value={4} />
+          <Picker.Item label='02:30' value={5} />
+          <Picker.Item label='03:00' value={6} />
+          <Picker.Item label='03:30' value={7} />
+          <Picker.Item label='04:00' value={8} />
+          <Picker.Item label='04:30' value={9} />
+          <Picker.Item label='05:00' value={10} />
+          <Picker.Item label='05:30' value={11} />
+          <Picker.Item label='06:00' value={12} />
+          <Picker.Item label='06:30' value={13} />
+          <Picker.Item label='07:00' value={14} />
+          <Picker.Item label='07:30' value={15} />
+          <Picker.Item label='08:00' value={16} />
+          <Picker.Item label='08:30' value={17} />
+          <Picker.Item label='09:00' value={18} />
+          <Picker.Item label='09:30' value={19} />
+          <Picker.Item label='10:00' value={20} />
+          <Picker.Item label='10:30' value={21} />
+          <Picker.Item label='11:00' value={22} />
+          <Picker.Item label='11:30' value={23} />
+          <Picker.Item label='12:00' value={24} />
+          <Picker.Item label='12:30' value={25} />
+          <Picker.Item label='13:00' value={26} />
+          <Picker.Item label='13:30' value={27} />
+          <Picker.Item label='14:00' value={28} />
+          <Picker.Item label='14:30' value={29} />
+          <Picker.Item label='15:00' value={30} />
+          <Picker.Item label='15:30' value={31} />
+          <Picker.Item label='16:00' value={32} />
+          <Picker.Item label='16:30' value={33} />
+          <Picker.Item label='17:00' value={34} />
+          <Picker.Item label='17:30' value={35} />
+          <Picker.Item label='18:00' value={36} />
+          <Picker.Item label='18:30' value={37} />
+          <Picker.Item label='19:00' value={38} />
+          <Picker.Item label='19:30' value={39} />
+          <Picker.Item label='20:00' value={40} />
+          <Picker.Item label='20:30' value={41} />
+          <Picker.Item label='21:00' value={42} />
+          <Picker.Item label='21:30' value={43} />
+          <Picker.Item label='22:00' value={44} />
+          <Picker.Item label='22:30' value={45} />
+          <Picker.Item label='23:00' value={46} />
+          <Picker.Item label='23:30' value={47} />
+        </Picker>
+        <Picker
+          mode='dropdown'
+          selectedValue={this.state.bufTimeTo}
+          onValueChange={(data) => this.setState({ bufTimeTo: data })}>
+          <Picker.Item label='input when class ends' value='' />
+          <Picker.Item label='00:00' value={0} />
+          <Picker.Item label='00:30' value={1} />
+          <Picker.Item label='01:00' value={2} />
+          <Picker.Item label='01:30' value={3} />
+          <Picker.Item label='02:00' value={4} />
+          <Picker.Item label='02:30' value={5} />
+          <Picker.Item label='03:00' value={6} />
+          <Picker.Item label='03:30' value={7} />
+          <Picker.Item label='04:00' value={8} />
+          <Picker.Item label='04:30' value={9} />
+          <Picker.Item label='05:00' value={10} />
+          <Picker.Item label='05:30' value={11} />
+          <Picker.Item label='06:00' value={12} />
+          <Picker.Item label='06:30' value={13} />
+          <Picker.Item label='07:00' value={14} />
+          <Picker.Item label='07:30' value={15} />
+          <Picker.Item label='08:00' value={16} />
+          <Picker.Item label='08:30' value={17} />
+          <Picker.Item label='09:00' value={18} />
+          <Picker.Item label='09:30' value={19} />
+          <Picker.Item label='10:00' value={20} />
+          <Picker.Item label='10:30' value={21} />
+          <Picker.Item label='11:00' value={22} />
+          <Picker.Item label='11:30' value={23} />
+          <Picker.Item label='12:00' value={24} />
+          <Picker.Item label='12:30' value={25} />
+          <Picker.Item label='13:00' value={26} />
+          <Picker.Item label='13:30' value={27} />
+          <Picker.Item label='14:00' value={28} />
+          <Picker.Item label='14:30' value={29} />
+          <Picker.Item label='15:00' value={30} />
+          <Picker.Item label='15:30' value={31} />
+          <Picker.Item label='16:00' value={32} />
+          <Picker.Item label='16:30' value={33} />
+          <Picker.Item label='17:00' value={34} />
+          <Picker.Item label='17:30' value={35} />
+          <Picker.Item label='18:00' value={36} />
+          <Picker.Item label='18:30' value={37} />
+          <Picker.Item label='19:00' value={38} />
+          <Picker.Item label='19:30' value={39} />
+          <Picker.Item label='20:00' value={40} />
+          <Picker.Item label='20:30' value={41} />
+          <Picker.Item label='21:00' value={42} />
+          <Picker.Item label='21:30' value={43} />
+          <Picker.Item label='22:00' value={44} />
+          <Picker.Item label='22:30' value={45} />
+          <Picker.Item label='23:00' value={46} />
+          <Picker.Item label='23:30' value={47} />
+        </Picker>
         <View>
           <Text style={style.inputDescription}>Class name</Text>
           <TextInput
             style={style.inputStyles}
             placeholder={'input name of the class'}
             autoCorrect={false}
-            onChange={this.onClassChange}
+            onChangeText={(data) => this.setState({ bufClass: data })}
           />
         </View>
         <View>
@@ -164,7 +234,7 @@ class AddNewEvent extends Component {
             style={style.inputStyles}
             placeholder={'input homework for that class'}
             autoCorrect={false}
-            onChange={this.onHomeworkChange}
+            onChangeText={(data) => this.setState({ bufHomework: data })}
           />
         </View>
         <View style={style.submitWrapper}>
@@ -173,7 +243,7 @@ class AddNewEvent extends Component {
         <View style={this.state.notPossibleInfo ? style.notRightInfoStyle : style.notRightInfoStyleNone}>
           <Text>Sorry, not possible information passed in</Text>
         </View>
-      </View>
+      </ScrollView>
       );
     }
 }

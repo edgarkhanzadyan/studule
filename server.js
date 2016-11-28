@@ -50,6 +50,14 @@ app.get('/new_schedule', (req, res) => {
   });
   res.end(sendMe);
 });
+app.get('/mobile_new_schedule', (req, res) => {
+  res.setHeader('content-type', 'application/json');
+  const sendMe = {
+    payload: week,
+    homew: homework,
+  };
+  res.end(sendMe);
+})
 app.post('/new_data', json_parser, form_parser, (req, res) => {
   week = req.body.array;
   homework = req.body.homework;

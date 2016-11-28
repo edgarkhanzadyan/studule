@@ -7,31 +7,27 @@ class Calendar extends Component {
     super();
     this.state = {
       week: [
-        {day:'Monday',schedule: [{},{},{},{},{},{},{event: 'heeey'},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{event: 'Discrete mathematics in 304W with fucaodjoak djfkjsndfkljasdl kjfalksdj fhlkajsdhflkjashdfk'},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{event: 'yo bitch'},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
+        {day:'Monday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
+        {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
       ],weekNumber: 0
     };
   }
-  // componentDidMount() {
-  //   let request = 'http://localhost:8888/new_schedule';
+  // componentWillMount() {
+  //   let request = 'http://localhost:8080/new_schedule';
   //   console.log('bef');
-  //   let schedule = fetch(request)
-  //   .then((response) => response.text())
-  //   .then((responseText) => {
-  //     console.log(responseText);
+  //   fetch(request)
+  //   .then(response => response.json())
+  //   .then(actual_data => {
+  //     this.setState({week: actual_data.payload});
   //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   });
-  //   console.log('after');
-  //   console.log(schedule);
-  //   let all_schedule = schedule.json();
-  //   this.setState({week: all_schedule.payload});
+  //   .catch(
+  //     console.error
+  //   );
   // };
   _navigate(propName, name) {
     if(propName === 'toHomework'){
@@ -104,17 +100,32 @@ class Calendar extends Component {
       }
     };
     const makeDay = this.state.week[this.state.weekNumber].schedule.map((day, idx) => {
-      if(idx < 10){
+      if(idx - Math.round(idx/2) < 10 && idx % 2 == 0){
         return(
           <View key={idx} style={style.eventTimeWrapper}>
-            <Text style={style.timeText}>0{idx}:00</Text>
+            <Text style={style.timeText}>0{idx - Math.round(idx/2)}:00</Text>
             <Text style={style.eventText}>{day.event}</Text>
           </View>
         );
-      }else if(idx >= 10){
+      }else if(idx - Math.round(idx/2) < 10 && idx % 2 == 1){
         return(
           <View key={idx} style={style.eventTimeWrapper}>
-            <Text style={style.timeText}>{idx}:00</Text>
+            <Text style={style.timeText}>0{idx - Math.round(idx/2)}:30</Text>
+            <Text style={style.eventText}>{day.event}</Text>
+          </View>
+        );
+      }
+      else if(idx - Math.round(idx/2) >= 10 && idx % 2 == 0){
+        return(
+          <View key={idx} style={style.eventTimeWrapper}>
+            <Text style={style.timeText}>{idx - Math.round(idx/2)}:00</Text>
+            <Text style={style.eventText}>{day.event}</Text>
+          </View>
+        );
+      }else if(idx - Math.round(idx/2) >= 10 && idx % 2 == 1){
+        return(
+          <View key={idx} style={style.eventTimeWrapper}>
+            <Text style={style.timeText}>{idx - Math.round(idx/2)}:30</Text>
             <Text style={style.eventText}>{day.event}</Text>
           </View>
         );
@@ -127,7 +138,7 @@ class Calendar extends Component {
             <Text style={style.changeGoToScene}>go to Homework</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={style.flexRow}>
           <TouchableOpacity onPress={() => this._navigate('toAddingEvent')} style={style.addEventWrapper}>
             <Text style={style.addEventText}>Add event</Text>
           </TouchableOpacity>
