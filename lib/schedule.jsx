@@ -23,19 +23,14 @@ class Schedule extends Component {
       bufDay: '',
       notPossibleInfo: false,
     };
-    for (let i = 0; i < 7; ++i) {
-      for (let j = 0; j < 24; ++j) {
-        this.state.week[i].schedule[j] = {
-          event: ''
-        };
-      }
-    }
+
     this.onDayChange = this.onDayChange.bind(this);
     this.onTimeChangeFrom = this.onTimeChangeFrom.bind(this);
     this.onTimeChangeTo = this.onTimeChangeTo.bind(this);
     this.onClassChange = this.onClassChange.bind(this);
     this.onHomeworkChange = this.onHomeworkChange.bind(this);
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
+    this.deleteHandler = this.deleteHandler.bind(this);
   }
   async componentDidMount() {
     let request = 'http://localhost:8080/new_schedule';
@@ -58,7 +53,7 @@ class Schedule extends Component {
         newClasses[dayIndex].schedule[i].event = this.state.bufClass;
       }
       const newHomework = this.state.hw;
-      if(this.state.bufHomework.trim() !== ''){
+      if(this.state.bufHomework.trim() !== '') {
         const fullHw = `${this.state.bufClass} homework for ${this.state.bufTimeFrom}:00 on ${this.state.bufDay}: ${this.state.bufHomework}`;
         newHomework[newHomework.length] = fullHw;
       }
@@ -77,6 +72,34 @@ class Schedule extends Component {
       this.setState({ notPossibleInfo: false, week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
     }else if(e.key === 'Enter' || e.button === 0) {
       this.setState({ notPossibleInfo: true });
+    }
+  }
+  deleteHandler (e) {
+    if (this.state.bufTimeFrom !== '' && this.state.bufTimeTo !== '' && this.state.bufDay !== '' && (this.state.bufTimeTo > this.state.bufTimeFrom)) {
+      let dayIndex;
+      for(let i = 0; i < 7; ++i){
+        if(this.state.week[i].day === this.state.bufDay){
+          dayIndex = i;
+        }
+      }
+      const newClasses = this.state.week;
+      for(let i = this.state.bufTimeFrom; i < this.state.bufTimeTo; ++i){
+        newClasses[dayIndex].schedule[i].event = '';
+      }
+      const newHomework = this.state.hw;
+      const request_options = {
+        method: 'post',
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        body:JSON.stringify({
+          array : newClasses,
+          homework : newHomework,
+        }),
+      };
+      fetch('/new_data', request_options);
+      this.setState({ notPossibleInfo: false, week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
     }
   }
   onDayChange(e){
@@ -192,7 +215,8 @@ class Schedule extends Component {
             <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework} onKeyDown={this.clickHandlerPushEvent}/>
           </div>
           <div style={style.buttonWrapper}>
-            <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event</button>
+            <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event </button>
+            <button style={style.buttonDate} onClick={this.deleteHandler}> Delete event </button>
             <p style={this.state.notPossibleInfo ? style.warningShow : style.warningNotShow}>Not possible information</p>
           </div>
         </div>
