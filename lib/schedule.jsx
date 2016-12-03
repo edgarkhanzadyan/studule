@@ -68,7 +68,10 @@ class Schedule extends Component {
           homework: newHomework,
         }),
       };
-      fetch('/new_data', request_options);
+      fetch('/new_data', request_options)
+      .then(resp => resp.text())
+      .then(console.log)
+      .catch(console.error);;
       this.setState({ notPossibleInfo: false, week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
     }else if(e.key === 'Enter' || e.button === 0) {
       this.setState({ notPossibleInfo: true });
@@ -112,12 +115,10 @@ class Schedule extends Component {
   }
   onTimeChangeFrom(e){
     const time = parseInt(e.currentTarget.value);
-    console.log(time);
     this.setState({ bufTimeFrom: time });
   }
   onTimeChangeTo(e){
     const time = parseInt(e.currentTarget.value);
-    console.log(time);
     this.setState({ bufTimeTo: time });
   }
   onHomeworkChange(e){

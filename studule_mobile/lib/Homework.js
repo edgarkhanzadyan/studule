@@ -5,8 +5,19 @@ export default
 class Homework extends Component {
   constructor(){
     super();
-    this.state = {hw: ['het', 'Freshman', 'Discrete mathematics']};
+    this.state = {hw: []};
   }
+  componentWillMount() {
+    let request = 'https://studule.mybluemix.net/new_schedule';
+    fetch(request)
+    .then(response => response.json())
+    .then(actual_data => {
+      this.setState({hw: actual_data.homew});
+    })
+    .catch(
+      console.error
+    );
+  };
   render(){
     const style = {
       mainContainer: {

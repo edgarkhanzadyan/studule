@@ -17,18 +17,17 @@ class Calendar extends Component {
       ],weekNumber: 0
     };
   }
-  // componentWillMount() {
-  //   let request = 'http://localhost:8080/new_schedule';
-  //   console.log('bef');
-  //   fetch(request)
-  //   .then(response => response.json())
-  //   .then(actual_data => {
-  //     this.setState({week: actual_data.payload});
-  //   })
-  //   .catch(
-  //     console.error
-  //   );
-  // };
+  componentWillMount() {
+    let request = 'https://studule.mybluemix.net/new_schedule';
+    fetch(request)
+    .then(response => response.json())
+    .then(actual_data => {
+      this.setState({week: actual_data.payload});
+    })
+    .catch(
+      console.error
+    );
+  };
   _navigate(propName, name) {
     if(propName === 'toHomework'){
       this.props.navigator.push({

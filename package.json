@@ -9,7 +9,7 @@
   "scripts": {
     "backend": "babel --presets=react --plugins=transform-class-properties lib/schedule.jsx --out-file lib/schedule.js",
     "build": "webpack --progress",
-    "build-site": "npm run backend && npm run build"
+    "build-site": "npm run backend && npm run build && node server.js"
   },
   "author": "Edgar Khanzadian edgar.khanzadian@gmail.com and Erik Davtyan erikdavtyan@gmail.com",
   "license": "ISC",
@@ -22,7 +22,8 @@
     "express": "^4.14.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+  	"cfenv": "1.0.x"
   },
   "babel": {
     "presets": [

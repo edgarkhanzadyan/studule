@@ -1,16 +1,21 @@
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Application = require('./lib/schedule');
-const port = 8080;
 const { createElement } = React;
 const body_parser = require('body-parser');
 const json_parser = body_parser.json();
 const form_parser = body_parser.urlencoded({extended: true});
 const express = require('express');
+const port = 8080;
 const app = express();
 const site = `
 <!doctype html>
   <html>
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
     <style>
      /*  Basic resets for modern browsers */
      * {
@@ -36,7 +41,7 @@ let week = [
   {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
 ];
 let homework = [];
-app.use(express.static('public'));
+app.use(express.static('public'));;
 
 app.get('/', (req, res) => {
   res.setHeader('content-type', 'text/html');
@@ -50,17 +55,9 @@ app.get('/new_schedule', (req, res) => {
   });
   res.end(sendMe);
 });
-app.get('/mobile_new_schedule', (req, res) => {
-  res.setHeader('content-type', 'application/json');
-  const sendMe = {
-    payload: week,
-    homew: homework,
-  };
-  res.end(sendMe);
-})
 app.post('/new_data', json_parser, form_parser, (req, res) => {
   week = req.body.array;
   homework = req.body.homework;
   res.end();
 });
-app.listen(port, () => console.log('started %d', port));
+app.listen(port, () => console.log(`server starting on ${port}`));

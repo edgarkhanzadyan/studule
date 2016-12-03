@@ -7,13 +7,13 @@ class AddNewEvent extends Component {
     super();
     this.state = {
       week: [
-        {day:'Monday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
+        {day:'Monday',schedule: []},
+        {day:'Tuesday',schedule: []},
+        {day:'Wednesday',schedule: []},
+        {day:'Thursday',schedule: []},
+        {day:'Friday',schedule: []},
+        {day:'Saturday',schedule: []},
+        {day:'Sunday',schedule: []}
       ],
       hw: [],
       bufClass: '',
@@ -24,9 +24,19 @@ class AddNewEvent extends Component {
       notPossibleInfo: false,
     };
   }
+  componentWillMount() {
+    let request = 'https://studule.mybluemix.net/new_schedule';
+    fetch(request)
+    .then(response => response.json())
+    .then(actual_data => {
+      this.setState({week: actual_data.payload});
+    })
+    .catch(
+      console.error
+    );
+  };
   clickHandlerPushEvent = (e) => {
     if(this.state.bufClass !== '' && this.state.bufTimeFrom !== '' && this.state.bufTimeTo !== '' && this.state.bufDay !== ''){
-      console.log('button');
       let dayIndex = 0;
       for(let i = 0; i < 7; ++i){
         if(this.state.week[i].day === this.state.bufDay){
@@ -39,7 +49,7 @@ class AddNewEvent extends Component {
       }
       const newHomework = this.state.hw;
       if(this.state.bufHomework !== ''){
-        const fullHw = this.state.bufHomework + " ( " + this.state.bufClass + " from " + this.state.bufTimeFrom + ":00 to " + this.state.bufTimeTo + ":00, " + this.state.bufDay + " )";
+        const fullHw = `${this.state.bufClass} homework for ${this.state.bufTimeFrom}:00 on ${this.state.bufDay}: ${this.state.bufHomework}`;
         newHomework[newHomework.length] = fullHw;
       }
       const request_options = {
@@ -53,14 +63,12 @@ class AddNewEvent extends Component {
           homework: newHomework,
         }),
       };
-      console.log(newClasses)
-      fetch('http://localhost:8080/new_data', request_options)
+      fetch('https://studule.mybluemix.net/new_data', request_options)
       .then(resp => resp.text())
       .then(console.log)
       .catch(console.error);
       this.setState({ week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: '', notPossibleInfo: false});
     }else {
-      console.log(this.state.notPossibleInfo);
       this.setState({ notPossibleInfo: true });
     }
   }
@@ -226,6 +234,7 @@ class AddNewEvent extends Component {
             placeholder={'input name of the class'}
             autoCorrect={false}
             onChangeText={(data) => this.setState({ bufClass: data })}
+            value={this.state.bufClass}
           />
         </View>
         <View>
@@ -235,6 +244,7 @@ class AddNewEvent extends Component {
             placeholder={'input homework for that class'}
             autoCorrect={false}
             onChangeText={(data) => this.setState({ bufHomework: data })}
+            value={this.state.bufHomework}
           />
         </View>
         <View style={style.submitWrapper}>
