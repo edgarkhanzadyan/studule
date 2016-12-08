@@ -54,7 +54,13 @@ class Schedule extends Component {
       }
       const newHomework = this.state.hw;
       if(this.state.bufHomework.trim() !== '') {
-        const fullHw = `${this.state.bufClass} homework for ${this.state.bufTimeFrom}:00 on ${this.state.bufDay}: ${this.state.bufHomework}`;
+        let fullHw;
+        if (this.state.bufTimeFrom % 2 === 0) {
+          fullHw = `${this.state.bufClass} homework for ${this.state.bufTimeFrom / 2}:00 on ${this.state.bufDay}: ${this.state.bufHomework}`;
+        }
+        else {
+          fullHw = `${this.state.bufClass} homework for ${Math.round(this.state.bufTimeFrom / 2)}:30 on ${this.state.bufDay}: ${this.state.bufHomework}`;
+        }
         newHomework[newHomework.length] = fullHw;
       }
       const request_options = {
