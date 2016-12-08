@@ -84,17 +84,10 @@ class Schedule extends Component {
     }
   }
   deleteHandler (e) {
-    if (this.state.bufTimeFrom !== '' && this.state.bufTimeTo !== '' && this.state.bufDay !== '' && (this.state.bufTimeTo > this.state.bufTimeFrom)) {
-      let dayIndex;
-      for(let i = 0; i < 7; ++i){
-        if(this.state.week[i].day === this.state.bufDay){
-          dayIndex = i;
-        }
-      }
+      const hour = e.currentTarget.id % 100;
+      const day = Math.floor(e.currentTarget.id / 100);
       const newClasses = this.state.week;
-      for(let i = this.state.bufTimeFrom; i < this.state.bufTimeTo; ++i){
-        newClasses[dayIndex].schedule[i].event = '';
-      }
+      newClasses[day].schedule[hour] = '';
       const newHomework = this.state.hw;
       const request_options = {
         method: 'post',
@@ -109,7 +102,6 @@ class Schedule extends Component {
       };
       fetch('/new_data', request_options);
       this.setState({ notPossibleInfo: false, week: newClasses, bufClass: '',bufTimeTo: '', bufTimeFrom: '', bufHomework: '', bufDay: ''});
-    }
   }
   onDayChange(e){
     const day = e.currentTarget.value;
@@ -184,8 +176,9 @@ class Schedule extends Component {
           );
         }
         else {
+          const givenId = idx * 100 + i;
           return(
-            <li key={i} style={style.eventli}>{ev}<button style={style.boxClose}>x</button></li>
+            <li key={i} style={style.eventli}>{ev}<button id={givenId} style={style.boxClose} onClick={this.deleteHandler}>x</button></li>
           );
         }
       });
@@ -231,7 +224,6 @@ class Schedule extends Component {
           </div>
           <div style={style.buttonWrapper}>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event </button>
-            <button style={style.buttonDate} onClick={this.deleteHandler}> Delete event </button>
             <p style={this.state.notPossibleInfo ? style.warningShow : style.warningNotShow}>Not possible information</p>
           </div>
         </div>
