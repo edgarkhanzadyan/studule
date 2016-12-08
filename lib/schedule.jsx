@@ -50,7 +50,7 @@ class Schedule extends Component {
       }
       const newClasses = this.state.week;
       for(let i = this.state.bufTimeFrom; i < this.state.bufTimeTo; ++i){
-        newClasses[dayIndex].schedule[i].event = this.state.bufClass;
+        newClasses[dayIndex].schedule[i] = this.state.bufClass;
       }
       const newHomework = this.state.hw;
       if(this.state.bufHomework.trim() !== '') {
@@ -177,9 +177,17 @@ class Schedule extends Component {
     });
     const makeDays = this.state.week.map((day, idx) => {
       const makeEvents = this.state.week[idx].schedule.map((ev, i) => {
-        return(
-          <li key={i} style={style.eventli}>{ev.event}</li>
-        );
+        if(ev === '')
+        {
+          return(
+            <li key={i} style={style.eventli}></li>
+          );
+        }
+        else {
+          return(
+            <li key={i} style={style.eventli}>{ev}<button style={style.boxClose}>x</button></li>
+          );
+        }
       });
       return(
         <div style={style.eventBox}>
