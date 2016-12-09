@@ -15,19 +15,16 @@ const site = `
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="icon" type="png" href="./studule.png">
+      <title>
+        Studule
+      </title>
+      <link rel="stylesheet" type="text/css" href="./styles.css"/>
     </head>
-    <style>
-     /*  Basic resets for modern browsers */
-     * {
-       margin:0; padding:0; font-family: 'poppins', 'sans-serif';
-     }
-     html { box-sizing: border-box; }
-     *, *:before, *:after { box-sizing: inherit; }
-     /*  Basic resets for modern browsers */
-    </style>
     <body>
+    <h1 class="linear-wipe">Studule</h1>
       <div id='container'>${ReactDOMServer.renderToString(createElement(Application, null))}</div>
-    <script src='bundle.js'></script>
+        <script src='bundle.js'></script>
     </body>
   </html>
 `;

@@ -196,7 +196,6 @@ class Schedule extends Component {
       <div style={style.flexColumn}>
         <header style={style.header}>
           <div style={style.logo}>
-            Studule
           </div>
         </header>
         <div style={style.scheduleAdd}>

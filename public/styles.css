@@ -1,0 +1,42 @@
+ /*  Basic resets for modern browsers */
+ * {
+   margin:0; padding:0; font-family: 'poppins', 'sans-serif';
+ }
+ html { box-sizing: border-box; }
+ *, *:before, *:after { box-sizing: inherit; }
+ /*  Basic resets for modern browsers */
+ html { height: 100%; }
+
+ html {
+   height: 100%;
+ }
+ body {
+   background: #333;
+
+ }
+ h1 {
+   font-size: 4vw;
+ }
+ .linear-wipe {
+   text-align: center;
+   background: -webkit-linear-gradient(left, #ffffff 20%, #ffff00 40%, #ffff00 60%, #ffffff 80%);
+   background: linear-gradient(to right, #ffffff 20%, #ffff00 40%, #ffff00 60%, #ffffff 80%);
+   background-size: 200% auto;
+   color: #000;
+   background-clip: text;
+   text-fill-color: transparent;
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   -webkit-animation: shine 3s linear infinite;
+           animation: shine 3s linear infinite;
+ }
+ @-webkit-keyframes shine {
+   to {
+     background-position: 100% center;
+   }
+ }
+ @keyframes shine {
+   to {
+     background-position: 100% center;
+   }
+ }
