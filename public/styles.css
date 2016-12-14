@@ -11,7 +11,7 @@
    height: 100%;
  }
  body {
-    background-image: url("wp.jpg");
+    background-image: url("wlp.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -31,8 +31,8 @@
  }
  .linear-wipe {
    text-align: center;
-   background: -webkit-linear-gradient(left, #ffffff 20%, #ffff00 40%, #ffff00 60%, #ffffff 80%);
-   background: linear-gradient(to right, #ffffff 20%, #ffff00 40%, #ffff00 60%, #ffffff 80%);
+   background:-webkit-linear-gradient(left, #ffffff 20%, #0a4f52 40%, #144b61 60%, #ffffff 80%);
+   background: linear-gradient(to right, #ffffff 20%, #167eb9 40%, #023e50 60%, #ffffff 80%);
    background-size: 200% auto;
    color: #000;
    background-clip: text;
