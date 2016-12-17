@@ -8,6 +8,7 @@ const form_parser = body_parser.urlencoded({extended: true});
 const express = require('express');
 const port = 8080;
 const app = express();
+const means = require('./STU-MEANINGS');
 const site = `
 <!doctype html>
   <html>
@@ -30,8 +31,8 @@ const site = `
 `;
 let week = [
   {day:'Monday',schedule: Array(48).fill('')},
-  {day:'Tuesday',schedule:Array(48).fill('')},
   {day:'Wednesday',schedule: Array(48).fill('')},
+  {day:'Tuesday',schedule:Array(48).fill('')},
   {day:'Thursday',schedule: Array(48).fill('')},
   {day:'Friday',schedule: Array(48).fill('')},
   {day:'Saturday',schedule:Array(48).fill('')},
@@ -49,6 +50,7 @@ app.get('/new_schedule', (req, res) => {
   const sendMe = JSON.stringify({
     payload: week,
     homew: homework,
+    studMean: means,
   });
   res.end(sendMe);
 });

@@ -22,6 +22,8 @@ class Schedule extends Component {
       bufHomework: '',
       bufDay: '',
       notPossibleInfo: false,
+      studMean:[],
+      bufStudMean: 'STU'
     };
 
     this.onDayChange = this.onDayChange.bind(this);
@@ -31,14 +33,18 @@ class Schedule extends Component {
     this.onHomeworkChange = this.onHomeworkChange.bind(this);
     this.clickHandlerPushEvent = this.clickHandlerPushEvent.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
+    this.randomStuduleMeaning = this.randomStuduleMeaning.bind(this);
   }
   async componentDidMount() {
     let request = 'http://localhost:8080/new_schedule';
     let schedule = await fetch(request);
     let all_schedule = await schedule.json();
-    this.setState({week: all_schedule.payload, hw: all_schedule.homew});
+    this.setState({week: all_schedule.payload, hw: all_schedule.homew, studMean: all_schedule.studMean});
   };
-
+  randomStuduleMeaning(){
+    const whatToTake = Math.floor(Math.random() * this.state.studMean.length);
+    this.setState({bufStudMean: this.state.studMean[whatToTake]});
+  };
   clickHandlerPushEvent(e){
     if( this.state.bufClass.trim() !== '' && (e.key === 'Enter' || e.button === 0) && this.state.bufDay !== ''
     && this.state.bufTimeFrom !== '' && this.state.bufTimeTo !== '' && (this.state.bufTimeTo > this.state.bufTimeFrom)){
@@ -197,6 +203,11 @@ class Schedule extends Component {
         <header style={style.header}>
           <div style={style.logo}>
           </div>
+          <div style={style.studMeanWrap}>
+            <div style={style.studMean} onClick={this.randomStuduleMeaning}>
+              {this.state.bufStudMean}
+            </div>
+          </div>
         </header>
         <div style={style.scheduleAdd}>
           <div style={style.inputs}>
@@ -220,6 +231,7 @@ class Schedule extends Component {
             </select>
             <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass} onKeyDown={this.clickHandlerPushEvent}/>
             <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework} onKeyDown={this.clickHandlerPushEvent}/>
+            <a href={'https://github.com/edgarkhanzadyan/stu-meanings'}></a>
           </div>
           <div style={style.buttonWrapper}>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event </button>
