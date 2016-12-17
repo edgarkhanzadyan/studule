@@ -231,7 +231,7 @@ class Schedule extends Component {
             </select>
             <input style={style.classInput} placeholder={'Name of the class*'} onChange={this.onClassChange} value={this.state.bufClass} onKeyDown={this.clickHandlerPushEvent}/>
             <input style={style.homeworkInput} placeholder={'Homework (if applicable)'} onChange={this.onHomeworkChange} value={this.state.bufHomework} onKeyDown={this.clickHandlerPushEvent}/>
-            <a href={'https://github.com/edgarkhanzadyan/stu-meanings'}></a>
+            <a href={'https://github.com/edgarkhanzadyan/studule'}>Add your STU meanings here!</a>
           </div>
           <div style={style.buttonWrapper}>
             <button style={style.buttonDate} onClick={this.clickHandlerPushEvent}>Save event </button>
