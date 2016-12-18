@@ -29,7 +29,7 @@ class AddNewEvent extends Component {
     fetch(request)
     .then(response => response.json())
     .then(actual_data => {
-      this.setState({week: actual_data.payload});
+      this.setState({week: actual_data.payload, hw: actual_data.homew});
     })
     .catch(
       console.error
@@ -45,7 +45,7 @@ class AddNewEvent extends Component {
       }
       const newClasses = this.state.week;
       for(let i = this.state.bufTimeFrom; i <= this.state.bufTimeTo; ++i){
-        newClasses[dayIndex].schedule[i].event = this.state.bufClass;
+        newClasses[dayIndex].schedule[i] = this.state.bufClass;
       }
       const newHomework = this.state.hw;
       if(this.state.bufHomework !== ''){

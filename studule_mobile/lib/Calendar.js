@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Button } from 'react-native';
 
 export default
 class Calendar extends Component {
@@ -7,15 +7,35 @@ class Calendar extends Component {
     super();
     this.state = {
       week: [
-        {day:'Monday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Tuesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Wednesday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Thursday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Friday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Saturday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]},
-        {day:'Sunday',schedule: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
+        {day:'Monday',schedule: []},
+        {day:'Tuesday',schedule: []},
+        {day:'Wednesday',schedule: []},
+        {day:'Thursday',schedule: []},
+        {day:'Friday',schedule: []},
+        {day:'Saturday',schedule: []},
+        {day:'Sunday',schedule: []}
       ],weekNumber: 0
     };
+  }
+  deleteHandler (e) {
+      const hour = e.currentTarget.id % 100;
+      const day = Math.floor(e.currentTarget.id / 100);
+      const newClasses = this.state.week;
+      newClasses[day].schedule[hour] = '';
+      const newHomework = this.state.hw;
+      const request_options = {
+        method: 'post',
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        body:JSON.stringify({
+          array : newClasses,
+          homework : newHomework,
+        }),
+      };
+      fetch('/new_data', request_options);
+      this.setState({ notPossibleInfo: false, week: newClasses});
   }
   componentWillMount() {
     let request = 'https://studule.mybluemix.net/new_schedule';
@@ -99,18 +119,23 @@ class Calendar extends Component {
       }
     };
     const makeDay = this.state.week[this.state.weekNumber].schedule.map((day, idx) => {
+      if(typeof(day) === 'null'){
+        day === '';
+      }
+      console.log(day);
+      const givenId = idx * 100;
       if(idx - Math.round(idx/2) < 10 && idx % 2 == 0){
         return(
           <View key={idx} style={style.eventTimeWrapper}>
             <Text style={style.timeText}>0{idx - Math.round(idx/2)}:00</Text>
-            <Text style={style.eventText}>{day.event}</Text>
+            <Text style={style.eventText}>{day}</Text>
           </View>
         );
       }else if(idx - Math.round(idx/2) < 10 && idx % 2 == 1){
         return(
           <View key={idx} style={style.eventTimeWrapper}>
             <Text style={style.timeText}>0{idx - Math.round(idx/2)}:30</Text>
-            <Text style={style.eventText}>{day.event}</Text>
+            <Text style={style.eventText}>{day}</Text>
           </View>
         );
       }
@@ -118,14 +143,14 @@ class Calendar extends Component {
         return(
           <View key={idx} style={style.eventTimeWrapper}>
             <Text style={style.timeText}>{idx - Math.round(idx/2)}:00</Text>
-            <Text style={style.eventText}>{day.event}</Text>
+            <Text style={style.eventText}>{day}</Text>
           </View>
         );
       }else if(idx - Math.round(idx/2) >= 10 && idx % 2 == 1){
         return(
           <View key={idx} style={style.eventTimeWrapper}>
             <Text style={style.timeText}>{idx - Math.round(idx/2)}:30</Text>
-            <Text style={style.eventText}>{day.event}</Text>
+            <Text style={style.eventText}>{day}</Text>
           </View>
         );
       }
